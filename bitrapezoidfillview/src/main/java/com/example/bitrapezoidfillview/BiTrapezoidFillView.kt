@@ -31,3 +31,38 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawTrapezoidFill(scale : Float, size : Float, paint : Paint) {
+    save()
+    val path : Path = Path()
+    path.moveTo(0f, 0f)
+    path.lineTo(-size, 0f)
+    path.lineTo(-size, -size / 2)
+    path.lineTo(-size / 2, -size / 2)
+    path.lineTo(0f, 0f)
+    drawRect(RectF(-size, -size * 0.5f * scale, 0f, 0f), paint)
+    restore()
+}
+
+fun Canvas.drawBiTrapezoidFill(scale : Float, w : Float, h : Float, paint : Paint) {
+    val sf : Float = scale.sinify()
+    val size : Float = Math.min(w, h) / sizeFactor
+    save()
+    translate(w / 2, h / 2)
+    rotate(rot * sf.divideScale(5, parts))
+    drawLine(0f, 0f, -size * sf.divideScale(0, parts), 0f, paint)
+    drawLine(-size, 0f, -size, -size * 0.5f * sf.divideScale(1, parts), paint)
+    drawLine(-size, -size / 2, -size + size * 0.5f * sf.divideScale(2, parts), -size / 2, paint)
+    drawLine(-size / 2, -size / 2, -size / 2 * (1 - sf.divideScale(3, parts)), -size / 2 * (1 - sf.divideScale(3, parts)), paint)
+    drawTrapezoidFill(sf.divideScale(4, parts), size, paint)
+    restore()
+}
+
+fun Canvas.drawBTFNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawBiTrapezoidFill(scale, w, h, paint)
+}
