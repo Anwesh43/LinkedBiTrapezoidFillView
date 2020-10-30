@@ -218,4 +218,13 @@ class BiTrapezoidFillView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BiTrapezoidFillView {
+            val view : BiTrapezoidFillView = BiTrapezoidFillView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
