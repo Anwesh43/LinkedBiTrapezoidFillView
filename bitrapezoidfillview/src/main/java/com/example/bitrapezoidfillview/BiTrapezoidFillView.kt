@@ -40,7 +40,8 @@ fun Canvas.drawTrapezoidFill(scale : Float, size : Float, paint : Paint) {
     path.lineTo(-size, -size / 2)
     path.lineTo(-size / 2, -size / 2)
     path.lineTo(0f, 0f)
-    drawRect(RectF(-size, -size * 0.5f * scale, 0f, 0f), paint)
+    clipPath(path)
+    drawRect(RectF(-size * scale, -size * 0.5f, 0f, 0f), paint)
     restore()
 }
 
@@ -50,11 +51,22 @@ fun Canvas.drawBiTrapezoidFill(scale : Float, w : Float, h : Float, paint : Pain
     save()
     translate(w / 2, h / 2)
     rotate(rot * sf.divideScale(5, parts))
-    drawLine(0f, 0f, -size * sf.divideScale(0, parts), 0f, paint)
-    drawLine(-size, 0f, -size, -size * 0.5f * sf.divideScale(1, parts), paint)
-    drawLine(-size, -size / 2, -size + size * 0.5f * sf.divideScale(2, parts), -size / 2, paint)
-    drawLine(-size / 2, -size / 2, -size / 2 * (1 - sf.divideScale(3, parts)), -size / 2 * (1 - sf.divideScale(3, parts)), paint)
-    drawTrapezoidFill(sf.divideScale(4, parts), size, paint)
+    for (j in 0..1) {
+        save()
+        scale(1f - 2 * j, 1f)
+        drawLine(0f, 0f, -size * sf.divideScale(0, parts), 0f, paint)
+        drawLine(-size, 0f, -size, -size * 0.5f * sf.divideScale(1, parts), paint)
+        drawLine(-size, -size / 2, -size + size * 0.5f * sf.divideScale(2, parts), -size / 2, paint)
+        drawLine(
+            -size / 2,
+            -size / 2,
+            -size / 2 * (1 - sf.divideScale(3, parts)),
+            -size / 2 * (1 - sf.divideScale(3, parts)),
+            paint
+        )
+        drawTrapezoidFill(sf.divideScale(4, parts), size, paint)
+        restore()
+    }
     restore()
 }
 
