@@ -1,0 +1,3 @@
+include ':bitrapezoidfillview'
+include ':app'
+rootProject.name = "LinkedBiTrapezoidFillView"
