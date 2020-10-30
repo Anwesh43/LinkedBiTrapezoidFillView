@@ -193,4 +193,27 @@ class BiTrapezoidFillView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : BiTrapezoidFillView) {
+
+        private val animator : Animator = Animator(view)
+        private val btf : BiTrapezoidFill = BiTrapezoidFill(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            btf.draw(canvas, paint)
+            animator.animate {
+                btf.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            btf.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
